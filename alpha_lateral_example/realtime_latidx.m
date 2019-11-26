@@ -32,7 +32,7 @@ function realtime_latidx(cfg)
 % set the default configuration options
 if ~isfield(cfg, 'dataformat'),     cfg.dataformat = [];      end % default is detected automatically
 if ~isfield(cfg, 'headerformat'),   cfg.headerformat = [];    end % default is detected automatically
-if ~isfield(cgit@github.com:mcvinding/realtime_meg.gitfg, 'eventformat'),    cfg.eventformat = [];     end % default is detected automatically
+if ~isfield(cfg, 'eventformat'),    cfg.eventformat = [];     end % default is detected automatically
 if ~isfield(cfg, 'blocksize'),      cfg.blocksize = 1;        end % in seconds
 % if ~isfield(cfg, 'channel'),        cfg.channel = 'all';      end
 if ~isfield(cfg, 'foilim'),         cfg.foilim = [0 120];     end
@@ -58,8 +58,8 @@ clear read_header
 % start by reading the header from the realtime buffer
 hdr = ft_read_header(cfg.headerfile, 'cache', true, 'retry', true, 'checkmaxfilter',false);
 
-chanL_idx = find(cellfun(@(ss) any(cellfun(@(kk) ~isempty(strfind(ss,kk)), left_sens)), hdr.label)); % The amazing cellfun
-chanR_idx = find(cellfun(@(ss) any(cellfun(@(kk) ~isempty(strfind(ss,kk)), right_sens)), hdr.label)); % The amazing cellfun
+chanL_idx = find(cellfun(@(ss) any(cellfun(@(kk) ~isempty(strfind(ss,kk)), cfg.left_chan)), hdr.label)); % The amazing cellfun
+chanR_idx = find(cellfun(@(ss) any(cellfun(@(kk) ~isempty(strfind(ss,kk)), cfg.right_chan)), hdr.label)); % The amazing cellfun
 allChan_idx = chanL_idx | chanR_idx;
 
 
@@ -68,6 +68,7 @@ cfg.channel = ft_channelselection(cfg.channel, hdr.label);
 % chanindx    = match_str(hdr.label, cfg.channel);
 nchan_left      = length(chanL_idx);
 nchan_right     = length(chanR_idx);
+nchan = nchan_left+nchan_right;
 
 if nchan==0
   error('no channels were selected');
