@@ -42,7 +42,7 @@ hdr = ft_read_header(filename);
 Specify user specific start/stop of data chunk to analyse.
 
 ```octave
-windowsize  = 1; %The time-window to analyse (in seconds)
+windowsize  = 1;                    %The time-window to analyse (in seconds)
 windowlen   = round(windowsize*hdr.Fs);
 endsample   = hdr.nSamples;
 begsample   = endsample - windowlen + 1;
@@ -82,15 +82,15 @@ To send TTL triggers from Matlab include the following code at the start of your
 ```octave
 config_io;
 adress = 41008;
-outp(adress, 0);         # Reset port
+outp(adress, 0);          % Reset port
 ```
 
 When you want to send the trigger from Matlab you should make it execute the following code:
 
 ```octave
-outp(adress, value);      #Send trigger
-WaitSecs(0.004);          #Wait (this delay should work)
-outp(adress, 0);          #Reset port
+outp(adress, value);      % Send trigger
+WaitSecs(0.004);          % Wait (this delay works)
+outp(adress, 0);          % Reset port
 ```
 
 This opens the port, sends the trigger with the code you specify in the variable value (must be an integer between 1-255), waits 4ms while sending the trigger and then close the port afterwards (i.e. sends a trigger with code "0").
@@ -117,16 +117,16 @@ m = SetUpSharedFile(filename);
 Where "filename" is the full filename (including path) to a .m file, e.g. "your_path/triggerFile.m". The variable m will be appearing as a struct in the Matlab workspaces. Whenever a trigger should be send you can change the value of the shared file, e.g.:
 
 ```octave
-m.Data(1) = 2;    #Change value to 2
+m.Data(1) = 2;      % Change value to 2
 ```
 
 The change to the variable will be read by any other Matlab process that also has set up and access to the shared file. You can then make conditional loops in either script to send and respond to changes in the shared file.
 
 ## Troubleshooting
 
-If the FieldTrip buffer was not closed correctly on the acquisition PC it might cause problems with reading data, the next time it is started. Be sure to close the buffer correctly by pressing ctrl+c and NOT by pressing the X in the corner of the terminal window.
+If the FieldTrip buffer was not closed correctly on the acquisition PC it might cause problems with reading data, the next time it is started. Be sure to close the buffer correctly by pressing **ctrl+c** and NOT by pressing the X in the corner of the terminal window.
 
-If the buffer does not respond and stopping and restarting it does not work, you have to kill the buffer. This is not a nice thing to do, and you should not be in this situation to begin with. Open a new terminal on the acquisition PC. Type "netstat -tulpn". This gives list of processes running on the acquisition PC. Find the process named "neuromag2ft" with a port number like "0.0.0.0.0.1972". Read the PID of this process. Be completely sure that you read the right PID. Then write "kill <PID>" in the terminal, where <PID> is the number you read. This will brutally kill the buffer. Then a new instance can be started.
+If the buffer does not respond and stopping and restarting it does not work, you have to kill the buffer. This is not a nice thing to do, and you should not be in this situation to begin with. Open a new terminal on the acquisition PC. Type "netstat -tulpn". This gives list of processes running on the acquisition PC. Find the process named **neuromag2ft** with a port number like "0.0.0.0.0.1972". Read the PID of this process. Be completely sure that you read the right PID. Then write "kill <PID>" in the terminal, where <PID> is the number you read. This will brutally kill the buffer. Then a new instance can be started.
 
 
 For questions about the real-time buffer see the see the FieldTrip webpage (http://www.fieldtriptoolbox.org/development/realtime/). For questions about the NatMEG implementation ask the NatMEG staff (http://natmeg.se/teamNatMEG/index.html).
